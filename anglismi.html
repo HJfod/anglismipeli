@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>anglismipeli</title>
+    <style>
+        button {
+            padding: 1rem;
+        }
+        p, h1 {
+            max-width: 70ch;
+        }
+        #controls {
+            margin-bottom: .5rem;
+        }
+        main {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+        p#answer.correct {
+            color: green;
+        }
+        p#answer:not(.correct) {
+            color: red;
+        }
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <main id="start">
+        <h1>anglismipeli</h1>
+        <p>tässä <strong>leikkimielisessä</strong> pelissä näet muutaman esimerkkilauseen suomeksi. tavoitteenasi on vastata, esiintyykö lauseessa (moderni) "anglismi" (englannista viime aikoina lainattu sana/ilmaisu) vaiko ei :-)</p>
+        <button id="start">aloittakaamme!</button>
+    </main>
+    <main id="game" class="hidden">
+        <h1 id="gp-title"></h1>
+        <p id="progress"></p>
+        <p id="question"></p>
+        <p id="answer"></p>
+        <p id="explanation"></p>
+        <div id="controls">
+            <button id="anglism">anglismi</button>
+            <button id="finnish">suomea</button>
+        </div>
+        <button id="next">seuraava</button>
+    </main>
+    <main id="end" class="hidden">
+        <h1>peli on loppu!</h1>
+        <p id="score"></p>
+        <p>kiitos pelaamisesta! jaa kavereidesi kanssa jotka puhuvat englantia suomeksi!</p>
+    </main>
+
+    <script defer>
+        // @ts-check
+
+        const QUESTIONS = [
+            {
+                anglism: "Kaverisi kertoo sinulle jotakin, johon uskot. Sanot: \"Tuo tekee järkeä.\"",
+                finnish: "Kaverisi kertoo sinulle jotakin, johon uskot. Sanot: \"Tuo käy järkeen.\"",
+                reason: "englanniksi sanotaan \"that makes sense\" (\"?tuo tekee järkeä\"), kun taas suomeksi on ollut tapana sanoa \"tuo käy järkeen\" (\"?that visits into the sense\")",
+                source: "yleinen vitsi"
+            },
+            {
+                anglism: "Otat pankista ison lainan sijoittamista varten. Kerrot ystävällesi: \"Pitkässä juoksussa tämä kannattaa!\"",
+                finnish: "Otat pankista ison lainan sijoittamista varten. Kerrot ystävällesi: \"Ajan kuluessa tämä kannattaa!\"",
+                reason: "englanniksi sanotaan \"in the long run\" (\"?pitkässä juoksussa\"), kun taas suomeksi on ollut tapana sanoa mm. \"ajan kuluessa\" tai \"ajan myötä\" (\"?as the time is spent\" tai \"?along with time\")",
+                source: "Kielikellon \"Pitkässä juoksussa\""
+            },
+            {
+                anglism: "Sinulla on sama nimi kuin isoäidilläsi. Kerrot ystävällesi: \"Minut on nimetty isoäitini jälkeen.\"",
+                finnish: "Sinulla on sama nimi kuin isoäidilläsi. Kerrot ystävällesi: \"Minut on nimetty isoäitini mukaan.\"",
+                reason: "englanniksi sanotaan \"I am named after my grandma\" (\"?olen nimetty isoäitini jälkeen\"), kun taas suomeksi on ollut tapana sanoa \"olen nimetty isoäitini mukaan\" (\"?I am named according to my grandma\")",
+                source: "se yks instagram reeli jossa se sano \"mut on nimetty X jälkeen\""
+            },
+            {
+                anglism: "Ystäväsi on alkanut jälleen tupakoimaan, ja yrität vakuuttaa häntä hakemaan apua. Sanot: \"Olen huolestunut sinusta!\"",
+                finnish: "Ystäväsi on alkanut jälleen tupakoimaan, ja yrität vakuuttaa häntä hakemaan apua. Sanot: \"Olen huolissani sinusta!\"",
+                reason: "englanniksi sanotaan \"I am worried about you\" (\"?olen huolestunut sinusta\"), kun taas suomeksi on ollut tapana sanoa \"olen huolissani sinusta\" (\"?I am in my worries about you\")",
+                source: "mun kaveri joka valitti et meijän speksin kässärissä sanotaan tää"
+            },
+            {
+                anglism: "Ystäväperheesi on tulossa käymään. Kerrot kumppanillesi: \"Perhe Mikkonen on tulossa illalla.\"",
+                finnish: "Ystäväperheesi on tulossa käymään. Kerrot kumppanillesi: \"Mikkosen perhe on tulossa illalla.\"",
+                reason: "englanniksi sanotaan \"family Mikkonen\" (\"?perhe Mikkonen\"), kun taas suomeksi on ollut tapana sanoa \"Mikkosen perhe\" (\"?the family of Mikkonen\")",
+                source: "Sanna Tiainen. (touko 2008). \"Sitten pitkän ajan kuluttua, kun sinusta on tullut jo pappa. Syntaksin ja sanaston vaihtelu opiskelijoiden kirjoitelmissa\". Jyväskylän yliopisto"
+            },
+            {
+                anglism: "Ihailet Kuhmon arkkitehtuuria. Sanot: \"Kuhmosta löytyy upeita rakennuksia.\"",
+                finnish: "Ihailet Kuhmon arkkitehtuuria. Sanot: \"Kuhmossa on upeita rakennuksia.\"",
+                reason: "englanniksi sanotaan \"you can find beautiful buildings in Kuhmo\" (\"?Kuhmosta löytyy upeita rakennuksia\"), kun taas suomeksi on ollut tapana sanoa \"Kuhmossa on upeita rakennuksia\" (\"there are beautiful buildings in Kuhmo\" (myös mahd.!))",
+                source: "Sanna Tiainen. (touko 2008). \"Sitten pitkän ajan kuluttua, kun sinusta on tullut jo pappa. Syntaksin ja sanaston vaihtelu opiskelijoiden kirjoitelmissa\". Jyväskylän yliopisto"
+            },
+            {
+                anglism: "Luet pöllämystyneenä uutisia. Huokaiset: \"Näin se maailma muuttuu.\"",
+                finnish: "Luet pöllämystyneenä uutisia. Huokaiset: \"Näin maailma muuttuu.\"",
+                reason: "sori jos sait anglismiversion tästä, tää on tosi ilkeä. juju nääs tässä on nyt se että lauseessa \"näin se maailma muuttuu\" sana \"se\" toimii kuin englannin määräinen artikkeli \"the\", joka on suomen puhekielssä jatkuvasti yleistyvä piirre, mutta periaatteessa suomessa ei historiallisesti moista määräistä artikkelia ole ollut, eli kyseessä on anglismi",
+                source: "Sanna Tiainen. (touko 2008). \"Sitten pitkän ajan kuluttua, kun sinusta on tullut jo pappa. Syntaksin ja sanaston vaihtelu opiskelijoiden kirjoitelmissa\". Jyväskylän yliopisto"
+            },
+            {
+                anglism: "Kerrot viimeöisestä unestasi kavereillesi. Sanot: \"Last night I saw a dream about a moose.\"",
+                finnish: "Kerrot viimeöisestä unestasi kavereillesi. Sanot: \"Last night I had a dream about a moose.\"",
+                reason: "englanniksi sanotaan \"I had a dream\" (\"?minulla oli uni\"), kun taas suomeksi on tapana sanoa \"näin unen\" (\"?I saw a dream\")",
+                source: "mä sanon tän aina väärin englanniksi ja kaikki valittaa mulle siitä",
+                inverted: true,
+            },
+        ];
+
+        let currentQuestionIndex = -1;
+        let currentQuestionIsAnglism = false;
+        let score = 0;
+
+        const mainstart = /** @type {HTMLElement} */ (document.querySelector("main#start"));
+        const maingp = /** @type {HTMLElement} */ (document.querySelector("main#game"));
+        const mainend = /** @type {HTMLElement} */ (document.querySelector("main#end"));
+
+        const h1gp = /** @type {HTMLHeadingElement} */ (document.querySelector("h1#gp-title"));
+
+        const bstart = /** @type {HTMLButtonElement} */ (document.querySelector("button#start"));
+        const bnext = /** @type {HTMLButtonElement} */ (document.querySelector("button#next"));
+        const banglism = /** @type {HTMLButtonElement} */ (document.querySelector("button#anglism"));
+        const bfinnish = /** @type {HTMLButtonElement} */ (document.querySelector("button#finnish"));
+
+        const pquestion = /** @type {HTMLParagraphElement} */ (document.querySelector("p#question"));
+        const pprogress = /** @type {HTMLParagraphElement} */ (document.querySelector("p#progress"));
+        const panswer = /** @type {HTMLParagraphElement} */ (document.querySelector("p#answer"));
+        const pexplanation = /** @type {HTMLParagraphElement} */ (document.querySelector("p#explanation"));
+        const pscore = /** @type {HTMLParagraphElement} */ (document.querySelector("p#score"));
+
+        /**
+         * @param {boolean} anglism
+         */
+        function onAnswer(anglism) {
+            banglism.disabled = true;
+            bfinnish.disabled = true;
+            bnext.disabled = false;
+        
+            panswer.classList.remove("hidden");
+            pexplanation.classList.remove("hidden");
+
+            const inverted = !!QUESTIONS[currentQuestionIndex].inverted;
+            const correct = inverted ? 
+                (currentQuestionIsAnglism !== anglism) :
+                (currentQuestionIsAnglism === anglism);
+
+            if (correct) {
+                score += 1;
+            }
+            panswer.classList.toggle("correct", correct);
+            panswer.innerHTML = `${correct ? "oikein!" : "väärin!"} ` + 
+                `tämä oli ${currentQuestionIsAnglism ? (inverted ? "suomismi" : "anglismi") : (inverted ? "englantia" : "suomea")}!`;
+            pexplanation.innerHTML = `${QUESTIONS[currentQuestionIndex].reason}<br><br>` + 
+                `(lähde: ${QUESTIONS[currentQuestionIndex].source})`;
+            
+            pscore.innerHTML = `pisteesi: ${score}/${QUESTIONS.length}`;
+
+            pprogress.innerHTML = `kysymys ${currentQuestionIndex + 1}/${QUESTIONS.length} ` + 
+                `(pisteet tähän mennessä: ${score})`;
+        }
+        function onNext() {
+            banglism.disabled = false;
+            bfinnish.disabled = false;
+            bnext.disabled = true;
+
+            mainstart.classList.add("hidden");
+            maingp.classList.remove("hidden");
+        
+            panswer.classList.add("hidden");
+            pexplanation.classList.add("hidden")
+
+            
+            if (currentQuestionIndex < QUESTIONS.length - 1) {
+                currentQuestionIndex += 1;
+                pprogress.innerHTML = `kysymys ${currentQuestionIndex + 1}/${QUESTIONS.length} ` + 
+                    `(pisteet tähän mennessä: ${score})`;
+                h1gp.innerHTML = QUESTIONS[currentQuestionIndex].inverted ? 
+                    "BONUSKYSYMYS! onko tämä suomismi englannissa?" :
+                    "onko tämä anglismi?"
+                currentQuestionIsAnglism = Math.random() > 0.5;
+                pquestion.innerHTML = currentQuestionIsAnglism ? 
+                    QUESTIONS[currentQuestionIndex].anglism : 
+                    QUESTIONS[currentQuestionIndex].finnish;
+            }
+            else {
+                maingp.classList.add("hidden");
+                mainend.classList.remove("hidden");
+            }
+        }
+        banglism.addEventListener("click", () => onAnswer(true));
+        bfinnish.addEventListener("click", () => onAnswer(false));
+        bnext.addEventListener("click", () => onNext());
+        bstart.addEventListener("click", () => onNext());
+    </script>
+</body>
+</html>
