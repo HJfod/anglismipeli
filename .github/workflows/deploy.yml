@@ -18,7 +18,7 @@ jobs:
         uses: actions/checkout@v4
     
       - name: Copy game to dist/ folder
-        run: mkdir dist && cp anglismi.html dist/anglismi.html
+        run: mkdir dist && cp anglismi.html dist/index.html
 
       - name: Upload Artifact
         uses: actions/upload-pages-artifact@v3
