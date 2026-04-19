@@ -16,11 +16,14 @@ jobs:
     steps:
       - name: Checkout your repository using git
         uses: actions/checkout@v4
+    
+      - name: Copy game to dist/ folder
+        run: mkdir dist && cp anglismi.html dist/anglismi.html
 
       - name: Upload Artifact
         uses: actions/upload-pages-artifact@v3
         with:
-            path: anglismi.html
+            path: dist/
 
       - name: Deploy to GitHub Pages
         id: deployment
