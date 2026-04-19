@@ -43,6 +43,7 @@
         <p>tässä <strong>leikkimielisessä</strong> pelissä näet muutaman esimerkkilauseen suomeksi. tavoitteenasi on vastata, esiintyykö lauseessa (moderni) "anglismi" (englannista viime aikoina lainattu sana/ilmaisu) vaiko ei :-)</p>
         <p>huom. todella vanhoja anglismeja tai svetisismejä (ruotsista lainattuja ilmaisuja) ei lasketa!</p>
         <p>huom. 2. tämän visan ei ole tarkoitus esittää preskriptiivisiä mielipiteitä siitä, ovatko esitetyt anglismit "oikeata suomea" vai ei. suomen kieli kehittyy jatkuvasti ja kielten kehitykseen kuuluu olennaisesti sanojen ja ilmaisujen lainaaminen muista kielistä :-)</p>
+        <p>huom. 3. tarkoitus on arvioida vain lainausmerkkien sisällä olevia lausahduksia, eikä niitä edeltäviä esimerkkikonteksteja</p>
         <button id="start">aloittakaamme!</button>
     </main>
     <main id="game" class="hidden">
@@ -71,16 +72,16 @@
 
         const QUESTIONS = [
             {
-                question: "Kaverisi kertoo sinulle jotakin, johon uskot. Sanot: \"Tuo käy järkeen.\"",
-                anglism: false,
-                reason: "englanniksi sanotaan \"that makes sense\" (\"tuo tekee järkeä\"), kun taas suomeksi on ollut tapana sanoa \"tuo käy järkeen\" (\"that visits into the sense\")",
-                source: "yleinen vitsi"
-            },
-            {
                 question: "Otat pankista ison lainan sijoittamista varten. Kerrot ystävällesi: \"Pitkässä juoksussa tämä kannattaa!\"",
                 anglism: true,
                 reason: "englanniksi sanotaan \"in the long run\" (\"pitkässä juoksussa\"), kun taas suomeksi on ollut tapana sanoa mm. \"ajan kuluessa\" tai \"ajan myötä\" (\"as the time is spent\" tai \"along with time\")",
                 source: "Kielikellon \"Pitkässä juoksussa\""
+            },
+            {
+                question: "Kaverisi kertoo sinulle jotakin, johon uskot. Sanot: \"Tuo käy järkeen.\"",
+                anglism: false,
+                reason: "englanniksi sanotaan \"that makes sense\" (\"tuo tekee järkeä\"), kun taas suomeksi on ollut tapana sanoa \"tuo käy järkeen\" (\"that visits into the sense\")",
+                source: "yleinen vitsi"
             },
             {
                 question: "Haluat ystäväsi maksavan sinulle velkansa. Sanot: \"On aika maksaa viulut!\"",
@@ -113,16 +114,16 @@
                 source: "Sanna Tiainen. (touko 2008). \"Sitten pitkän ajan kuluttua, kun sinusta on tullut jo pappa. Syntaksin ja sanaston vaihtelu opiskelijoiden kirjoitelmissa\". Jyväskylän yliopisto"
             },
             {
-                question: "Kerrot suunnitelmistasi. Sanot: \"Huomenna tulen käymään juoksulenkillä.\"",
-                anglism: false,
-                reason: "\"tulla\"-futuuri on suomeen todennäköisesti tullut ruotsista (\"jag kommer att springa imorgon\"), ja siitä löytyy myöskin esimerkkejä itämurteista jo pitkän ajan takaa",
-                source: "https://kielikello.fi/tulla-futuuri-suomea-vai-ei/"
-            },
-            {
                 question: "Ihailet Kuhmon arkkitehtuuria. Sanot: \"Kuhmosta löytyy upeita rakennuksia.\"",
                 anglism: true,
                 reason: "englanniksi sanotaan \"you can find beautiful buildings in Kuhmo\" (\"Kuhmosta löytyy upeita rakennuksia\"), kun taas suomeksi on ollut tapana sanoa \"Kuhmossa on upeita rakennuksia\" (\"there are beautiful buildings in Kuhmo\" (myös mahd.!))",
                 source: "Sanna Tiainen. (touko 2008). \"Sitten pitkän ajan kuluttua, kun sinusta on tullut jo pappa. Syntaksin ja sanaston vaihtelu opiskelijoiden kirjoitelmissa\". Jyväskylän yliopisto"
+            },
+            {
+                question: "Kerrot suunnitelmistasi. Sanot: \"Huomenna tulen käymään juoksulenkillä.\"",
+                anglism: false,
+                reason: "\"tulla\"-futuuri on suomeen todennäköisesti tullut ruotsista (\"jag kommer att springa imorgon\"), ja siitä löytyy myöskin esimerkkejä itämurteista jo pitkän ajan takaa",
+                source: "https://kielikello.fi/tulla-futuuri-suomea-vai-ei/"
             },
             {
                 question: "Olet keskustelemassa kavereidesi kanssa. Sanot: \"Tämä onkin hyvä aasinsilta seuraavaan aiheeseen...\"",
