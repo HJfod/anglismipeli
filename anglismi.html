@@ -104,7 +104,7 @@
             {
                 question: "Joku lyö sinua, ja aiot lyödä takaisin. Huudat: \"Täältä pesee samalla mitalla!\"",
                 anglism: false,
-                reason: "kummallekaan sanonnalle ei vaikuta löytyvän muista kielistä suoria vastineita, joskin suomenruotsissa on ilmeisesti harvinaisessa käytössä \"härifrån tvättar\". se tosin on ehkä lainaus suomesta ruotsiin eikä toisinpäin",
+                reason: "kummallekaan sanonnalle ei vaikuta löytyvän muista kielistä suoria vastineita",
                 source: "wiktionary, https://www.aamulehti.fi/kulttuuri/art-2000007381441.html, sanakirja.fi (\"mitta\" suomi->ruotsi)"
             },
             {
@@ -120,6 +120,12 @@
                 source: "Sanna Tiainen. (touko 2008). \"Sitten pitkän ajan kuluttua, kun sinusta on tullut jo pappa. Syntaksin ja sanaston vaihtelu opiskelijoiden kirjoitelmissa\". Jyväskylän yliopisto"
             },
             {
+                question: "Tulet koulusta kotiin. Kerrot äidillesi: \"Tein tänään uuden kaverin!\"",
+                anglism: true,
+                reason: "suomeksi tyypillisesti \"saadaan\" kavereita, eikä tehdä niitä",
+                source: "mun kaverit sano että tää on isosti anglismi"
+            },
+            {
                 question: "Kerrot suunnitelmistasi. Sanot: \"Huomenna tulen käymään juoksulenkillä.\"",
                 anglism: false,
                 reason: "\"tulla\"-futuuri on suomeen todennäköisesti tullut ruotsista (\"jag kommer att springa imorgon\"), ja siitä löytyy myöskin esimerkkejä itämurteista jo pitkän ajan takaa",
@@ -130,13 +136,7 @@
                 anglism: false,
                 reason: "\"aasinsilta\" lienee svetisismi (\"åsnebrygga\"), johon se on tullut latinasta (\"pons asinorum\"), mutta englannissa kyseistä ilmaisua ei tavanomaisesti käytetä (paitsi geometriassa)",
                 source: "https://en.wikipedia.org/wiki/Pons_asinorum"
-            },
-            {
-                question: "Luet pöllämystyneenä uutisia. Huokaiset: \"Näin se maailma muuttuu.\"",
-                anglism: true,
-                reason: "sori tää oli tosi ilkeä. juju tässä on nyt se että lauseessa \"näin se maailma muuttuu\" sana \"se\" toimii kuin englannin määräinen artikkeli \"the\", joka on suomen puhekielessä jatkuvasti yleistyvä piirre, mutta periaatteessa suomessa ei historiallisesti moista määräistä artikkelia ole ollut, eli kyseessä lienee anglismi",
-                source: "Sanna Tiainen. (touko 2008). \"Sitten pitkän ajan kuluttua, kun sinusta on tullut jo pappa. Syntaksin ja sanaston vaihtelu opiskelijoiden kirjoitelmissa\". Jyväskylän yliopisto"
-            },
+            },
             {
                 question: "Kerrot viimeöisestä unestasi kavereillesi. Sanot: \"Last night I saw a dream about a moose.\"",
                 anglism: true,
@@ -229,7 +229,7 @@
         
         const originalCopyText = bcopy.innerHTML;
         bcopy.addEventListener("click", async () => {
-            await navigator.clipboard.writeText(`Pelasin Anglismipeliä ja sain siitä ${score}/${QUESTIONS.length} oikein!`);
+            await navigator.clipboard.writeText(`Pelasin Anglismipeliä (v2) ja sain siitä ${score}/${QUESTIONS.length} oikein!`);
             bcopy.innerHTML = "tulokset kopioitu leikepöydälle!";
             await new Promise(res => setTimeout(res, 2000));
             bcopy.innerHTML = originalCopyText;
